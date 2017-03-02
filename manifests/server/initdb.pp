@@ -38,14 +38,6 @@ class edbas::server::initdb {
     }
   }
 
-  if($logdir) {
-    # Make sure the log directory exists, and has the correct permissions.
-    file { $logdir:
-      ensure => directory,
-      owner  => $user,
-      group  => $group,
-    }
-  }
 
   if($needs_initdb) {
     # Build up the initdb command.
@@ -66,6 +58,7 @@ class edbas::server::initdb {
     } else {
       $require_before_initdb = [$datadir]
     }
+
 
     $initdb_command = $locale ? {
       undef   => $ic_xlog,
@@ -99,6 +92,16 @@ class edbas::server::initdb {
         WHERE datname = 'template1'",
       unless  => "SELECT datname FROM pg_database WHERE
         datname = 'template1' AND encoding = pg_char_to_encoding('${encoding}')",
+    }
+  }
+  
+  if($logdir) {
+    # Make sure the log directory exists, and has the correct permissions.
+    file { $logdir:
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
+      require => Exec['edbas_initdb'],
     }
   }
 }

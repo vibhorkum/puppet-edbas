@@ -21,6 +21,9 @@ class edbas::server::config {
   $logdir                     = $edbas::server::logdir
   $service_name               = $edbas::server::service_name
   $log_line_prefix            = $edbas::server::log_line_prefix
+  $bindir                     = $edbas::server::bindir
+  $startuplog                 = "${logdir}/startup.log"
+  
 
   if ($manage_pg_hba_conf == true) {
     # Prepare the main pg_hba file
@@ -144,4 +147,26 @@ class edbas::server::config {
     }
   }
 
+ if $::osfamily == 'RedHat' {
+    if $::operatingsystemrelease =~ /^7/ or $::operatingsystem == 'Fedora' {
+       # Template uses:
+       # - $::operatingsystem
+       # - $service_name
+       # - $datadir
+      file { 'sysconfig-override':
+        ensure  => present,
+        path    => "/etc/sysconfig/ppas/${service_name}",
+        owner   => root,
+        group   => root,
+        content => template('edbas/sysconfig_ppas.erb'),
+        notify  => [ Exec['restart-systemd'], Class['edbas::server::service'] ],
+        before  => Class['edbas::server::reload'],
+      }
+      exec { 'restart-systemd':
+        command     => 'systemctl daemon-reload',
+        refreshonly => true,
+        path        => '/bin:/usr/bin:/usr/local/bin'
+      }
+    }
+  }
 }

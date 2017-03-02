@@ -37,6 +37,7 @@ class edbas::params inherits edbas::globals {
   $service_name               = pick($service_name,"ppas-${version}")
   $bindir                     = pick($bindir, "/usr/ppas-${version}/bin")
   $datadir                    = pick($datadir, "/var/lib/ppas/${version}/data")
+  $logdir                     = pick($logdir, "${datadir}/pg_log")
   $confdir                    = pick($confdir, $datadir)
   $psql_path                  = pick($psql_path, "${bindir}/psql")
   $pg_isready                 = pick($pg_isready, "${bindir}/pg_isready")
