@@ -44,6 +44,8 @@ class edbas::globals (
   $version                  = undef,
   $postgis_version          = undef,
   $repo_proxy               = undef,
+  $yum_user                 = undef,
+  $yum_password             = undef,
 
   $needs_initdb             = undef,
 
@@ -56,6 +58,10 @@ class edbas::globals (
 
   $manage_package_repo      = undef,
 ) {
+  #  check if yumuser and yum password is provided or not:
+   $err_prefix = "Module ${module_name} does not provide defaults for osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}; please specify a value for ${module_name}::globals::"
+   if ($yum_user == undef) { fail("${err_prefix}needs_user") }
+   if ($yum_password == undef) { fail("${err_prefix}yum_password") }
   # We are determining this here, because it is needed by the package repo
   # class.
   $default_version = '9.5'
@@ -78,8 +84,8 @@ class edbas::globals (
     class { 'edbas::repo':
       version => $globals_version,
       proxy   => $repo_proxy,
-      yumuser => 'qmg',
-      yumpassword => 'EdB123',
+      yumuser => $yum_user,
+      yumpassword => $yum_password,
     }
   }
 }
