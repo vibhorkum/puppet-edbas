@@ -25,28 +25,28 @@ class edbas::server (
   $initdb_path                = $edbas::params::initdb_path,
   $createdb_path              = $edbas::params::createdb_path,
   $psql_path                  = $edbas::params::psql_path,
-  $pg_hba_conf_path           = $edbas::params::pg_hba_conf_path,
-  $pg_ident_conf_path         = $edbas::params::pg_ident_conf_path,
+  $as_hba_conf_path           = $edbas::params::as_hba_conf_path,
+  $as_ident_conf_path         = $edbas::params::as_ident_conf_path,
   $edbas_conf_path            = $edbas::params::edbas_conf_path,
   $recovery_conf_path         = $edbas::params::recovery_conf_path,
   $datadir                    = $edbas::params::datadir,
   $xlogdir                    = $edbas::params::xlogdir,
   $logdir                     = $edbas::params::logdir,
   $log_line_prefix            = $edbas::params::log_line_prefix,
-  $pg_hba_conf_defaults       = $edbas::params::pg_hba_conf_defaults,
+  $as_hba_conf_defaults       = $edbas::params::as_hba_conf_defaults,
   $user                       = $edbas::params::user,
   $group                      = $edbas::params::group,
   $needs_initdb               = $edbas::params::needs_initdb,
   $encoding                   = $edbas::params::encoding,
   $locale                     = $edbas::params::locale,
-  $manage_pg_hba_conf         = $edbas::params::manage_pg_hba_conf,
-  $manage_pg_ident_conf       = $edbas::params::manage_pg_ident_conf,
+  $manage_as_hba_conf         = $edbas::params::manage_as_hba_conf,
+  $manage_as_ident_conf       = $edbas::params::manage_as_ident_conf,
   $manage_recovery_conf       = $edbas::params::manage_recovery_conf,
 
   #Deprecated
   $version                    = undef,
 ) inherits edbas::params {
-  $pg = 'edbas::server'
+  $as = 'edbas::server'
 
   alert (": psq_path => ${psql_path}")
   if $version != undef {
@@ -61,13 +61,13 @@ class edbas::server (
   }
 
   # Reload has its own ordering, specified by other defines
-  class { "${pg}::reload": require => Class["${pg}::install"] }
+  class { "${as}::reload": require => Class["${as}::install"] }
 
-  anchor { "${pg}::start": }->
-  class { "${pg}::install": }->
-  class { "${pg}::initdb": }->
-  class { "${pg}::config": }->
-  class { "${pg}::service": }->
-  class { "${pg}::passwd": }->
-  anchor { "${pg}::end": }
+  anchor { "${as}::start": }->
+  class { "${as}::install": }->
+  class { "${as}::initdb": }->
+  class { "${as}::config": }->
+  class { "${as}::service": }->
+  class { "${as}::passwd": }->
+  anchor { "${as}::end": }
 }

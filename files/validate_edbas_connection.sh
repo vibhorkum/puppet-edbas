@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# usage is: validate_db_connection 2 50 psql
+# usage is: validate_db_connection 2 50 pg_isready
 
 SLEEP=$1
 TRIES=$2
-PSQL=$3
+PG_ISREADY=$3
 
 STATE=1
 
@@ -19,7 +19,7 @@ do
     sleep $SLEEP
   fi
 
-  /bin/echo "SELECT 1" | $PSQL
+  $PG_ISREADY
   STATE=$?
 
   if [ $STATE -eq 0 ]

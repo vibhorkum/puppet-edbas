@@ -39,6 +39,7 @@ class edbas::params inherits edbas::globals {
   $datadir                    = pick($datadir, "/var/lib/ppas/${version}/data")
   $confdir                    = pick($confdir, $datadir)
   $psql_path                  = pick($psql_path, "${bindir}/psql")
+  $pg_isready                 = pick($pg_isready, "${bindir}/pg_isready")
   $service_reload             = "service ${service_name} reload"
   $perl_package_name          = pick($perl_package_name, 'perl-DBD-Pg')
   $python_package_name        = pick($python_package_name, 'python-psycopg2')
@@ -48,9 +49,12 @@ class edbas::params inherits edbas::globals {
    } else {
      $postgis_package_name = "ppas${package_version}-postgis"
    }
-
-  $service_status = pick($service_status, "/etc/init.d/${service_name} status | /bin/egrep -q 'Running clusters: .+|online'")
-      
+  
+  $os_major_release = 0 + $::operatingsystemmajrelease  
+  if ($os_major_release > 6) {
+     $service_status = pick($service_status, "systemctl status ${service_name} | /bin/grep -q 'Active: active (running)'")
+  } else { $service_status = pick($service_status, "/etc/init.d/${service_name} status | /bin/grep -q '${service_name} is running'")
+  } 
       # Since we can't determine defaults on our own, we rely on users setting
       # parameters with the edbas::globals class. Here we are checking
       # that the mandatory minimum is set for the module to operate.

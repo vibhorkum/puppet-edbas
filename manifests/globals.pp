@@ -23,6 +23,7 @@ class edbas::globals (
   $initdb_path              = undef,
   $createdb_path            = undef,
   $psql_path                = undef,
+  $pg_isready               = undef,
   $pg_hba_conf_path         = undef,
   $pg_ident_conf_path       = undef,
   $edbas_conf_path     = undef,
