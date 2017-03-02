@@ -60,7 +60,7 @@ class edbas::globals (
 ) {
   #  check if yumuser and yum password is provided or not:
    $err_prefix = "Module ${module_name} does not provide defaults for osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}; please specify a value for ${module_name}::globals::"
-   if ($yum_user == undef) { fail("${err_prefix}needs_user") }
+   if ($yum_user == undef) { fail("${err_prefix}yum_user") }
    if ($yum_password == undef) { fail("${err_prefix}yum_password") }
   # We are determining this here, because it is needed by the package repo
   # class.
