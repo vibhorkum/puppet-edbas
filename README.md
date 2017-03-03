@@ -32,7 +32,7 @@ If user wants to apply modify the listen_addresses and port parameters and wants
   ip_mask_deny_postgres_user => '0.0.0.0/32',
   ip_mask_allow_all_users    => '0.0.0.0/0',
   listen_addresses           => '*',
-  ipv4acls                   => ['host all johndoe 192.168.0.0/24 md5'],
+  ipv4acls                   => ['host all vibhor 192.168.0.0/24 md5'],
   }
 ```
 
