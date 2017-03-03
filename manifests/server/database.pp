@@ -10,7 +10,6 @@ define edbas::server::database(
   $istemplate       = false,
   $connect_settings = $edbas::server::default_connect_settings,
 ) {
-  $createdb_path = $edbas::server::createdb_path
   $user          = $edbas::server::user
   $group         = $edbas::server::group
   $psql_path     = $edbas::server::psql_path
@@ -31,8 +30,8 @@ define edbas::server::database(
     $port = $edbas::server::port
   }
 
-  # Set the defaults for the edbas_psql resource
-  edbas_psql { 'create_database':
+  # Set the defaults for the Edbas_psql resource
+  Edbas_psql { 
     psql_user        => $user,
     psql_group       => $group,
     psql_path        => $psql_path,
@@ -63,9 +62,6 @@ define edbas::server::database(
     default => "TABLESPACE=\"${tablespace}\"",
   }
 
-  if $createdb_path != undef{
-    warning('Passing "createdb_path" to edbas::database is deprecated, it can be removed safely for the same behaviour')
-  }
 
   edbas_psql { "Create db '${dbname}'":
     command => "CREATE DATABASE \"${dbname}\" WITH OWNER=\"${owner}\" ${template_option} ${encoding_option} ${locale_option} ${tablespace_option}",
@@ -81,7 +77,7 @@ define edbas::server::database(
     refreshonly => true,
   }
 
-  edbas_psql[ "Create db '${dbname}'" ]->
+ Edbas_psql[ "Create db '${dbname}'" ]->
   edbas_psql {"UPDATE pg_database SET datistemplate = ${istemplate} WHERE datname = '${dbname}'":
     unless => "SELECT datname FROM pg_database WHERE datname = '${dbname}' AND datistemplate = ${istemplate}",
     db     => $default_db,
@@ -91,7 +87,7 @@ define edbas::server::database(
     # The shobj_description function was only introduced with 8.2
     $comment_information_function = 'shobj_description'
 
-    edbas_psql[ "Create db '${dbname}'" ]->
+    Edbas_psql[ "Create db '${dbname}'" ]->
     edbas_psql {"COMMENT ON DATABASE \"${dbname}\" IS '${comment}'":
       unless => "SELECT pg_catalog.${comment_information_function}(d.oid, 'pg_database') as \"Description\" FROM pg_catalog.pg_database d WHERE datname = '${dbname}' AND pg_catalog.${comment_information_function}(d.oid, 'pg_database') = '${comment}'",
       db     => $dbname,
@@ -99,7 +95,7 @@ define edbas::server::database(
   }
 
   # Build up dependencies on tablespace
-  if($tablespace != undef and defined(edbas::server::tablespace[$tablespace])) {
-    edbas::server::tablespace[$tablespace]->edbas_psql[ "Create db '${dbname}'" ]
+  if($tablespace != undef and defined(Edbas::Server::Tablespace[$tablespace])) {
+    Edbas::Server::Tablespace[$tablespace]->Edbas_psql[ "Create db '${dbname}'" ]
   }
 }

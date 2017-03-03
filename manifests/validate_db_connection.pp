@@ -18,10 +18,10 @@ define edbas::validate_db_connection(
   include edbas::client
   include edbas::params
 
-  $pg_isready = $edbas::params::pg_isready
+  $psql_path = $edbas::params::psql_path
   $validcon_script_path = $edbas::client::validcon_script_path
 
-  $cmd_init = "${pg_isready} --quiet"
+  $cmd_init = "${psql_path} --quiet"
   $cmd_host = $database_host ? {
     undef   => '',
     default => "-h ${database_host} ",

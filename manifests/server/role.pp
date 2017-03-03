@@ -50,7 +50,7 @@ define edbas::server::role(
     $environment  = []
   }
 
-  edbas_psql { 'create_role':
+  Edbas_psql {
     db         => $db,
     port       => $port_override,
     psql_user  => $psql_user,
@@ -58,7 +58,7 @@ define edbas::server::role(
     psql_path  => $psql_path,
     connect_settings => $connect_settings,
     require    => [
-      edbas_psql["CREATE ROLE ${username} ENCRYPTED PASSWORD ****"],
+      Edbas_psql["CREATE ROLE ${username} ENCRYPTED PASSWORD ****"],
       Class['edbas::server'],
     ],
   }

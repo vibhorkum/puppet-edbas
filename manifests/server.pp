@@ -1,6 +1,6 @@
 # This installs a edbas server. See README.md for more details.
 class edbas::server (
-  $postgres_password          = undef,
+  $postgres_password          = 'edb',
   $package_name               = $edbas::params::server_package_name,
   $client_package_name        = $edbas::params::client_package_name,
   $package_ensure             = $edbas::params::package_ensure,

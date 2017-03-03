@@ -5,6 +5,7 @@ class edbas::server::passwd {
   $group             = $edbas::server::group
   $psql_path         = $edbas::server::psql_path
   $port              = $edbas::server::port
+  $dbname            = $edbas::server::default_database
 
   if ($postgres_password != undef) {
     # NOTE: this password-setting logic relies on the pg_hba.conf being
@@ -21,6 +22,7 @@ class edbas::server::passwd {
       logoutput   => true,
       cwd         => '/tmp',
       environment => [
+        "PGDATABASE=${dbname}",
         "PGPASSWORD=${postgres_password}",
         "PGPORT=${port}",
         "NEWPASSWD_ESCAPED=${escaped}",

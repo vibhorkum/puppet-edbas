@@ -14,7 +14,7 @@ define edbas::server::db (
   $owner      = undef
 ) {
 
-  if ! defined(edbas::server::database[$dbname]) {
+  if ! defined(Edbas::Server::Database[$dbname]) {
     edbas::server::database { $dbname:
       comment    => $comment,
       encoding   => $encoding,
@@ -26,22 +26,22 @@ define edbas::server::db (
     }
   }
 
-  if ! defined(edbas::server::role[$user]) {
+  if ! defined(Edbas::Server::Role[$user]) {
     edbas::server::role { $user:
       password_hash => $password,
-      before        => edbas::server::database[$dbname],
+      before        => Edbas::Server::Database[$dbname],
     }
   }
 
-  if ! defined(edbas::server::database_grant["GRANT ${user} - ${grant} - ${dbname}"]) {
+  if ! defined(Edbas::Server::Database_grant["GRANT ${user} - ${grant} - ${dbname}"]) {
     edbas::server::database_grant { "GRANT ${user} - ${grant} - ${dbname}":
       privilege => $grant,
       db        => $dbname,
       role      => $user,
-    } -> edbas::Validate_db_connection<| database_name == $dbname |>
+    } -> Edbas::Validate_db_connection<| database_name == $dbname |>
   }
 
-  if($tablespace != undef and defined(edbas::server::tablespace[$tablespace])) {
+  if($tablespace != undef and defined(Edbas::Server::Tablespace[$tablespace])) {
     edbas::server::tablespace[$tablespace]->edbas::server::database[$name]
   }
 }

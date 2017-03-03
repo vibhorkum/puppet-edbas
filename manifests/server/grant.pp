@@ -242,11 +242,11 @@ define edbas::server::grant (
     require          => Class['edbas::server']
   }
 
-  if($role != undef and defined(edbas::server::role[$role])) {
-    edbas::server::role[$role]->edbas_psql["grant:${name}"]
+  if($role != undef and defined(Edbas::Server::Role[$role])) {
+    Edbas::Server::Role[$role]->Edbas_psql["grant:${name}"]
   }
 
-  if($db != undef and defined(edbas::server::database[$db])) {
-    edbas::server::database[$db]->edbas_psql["grant:${name}"]
+  if($db != undef and defined(Edbas::Server::Database[$db])) {
+    Edbas::Server::Database[$db]->Edbas_psql["grant:${name}"]
   }
 }

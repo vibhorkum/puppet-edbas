@@ -1,12 +1,12 @@
 # This resource manages an individual rule that applies to the file defined in
 # $target. See README.md for more details.
 define edbas::server::pg_hba_rule(
-  $type = 'local',
-  $database = 'all',
-  $user = 'all',
-  $auth_method = 'trust',
+  $type,
+  $database,
+  $user,
+  $auth_method,
   $address     = undef,
-  $description = 'default HBA rule',
+  $description = 'none',
   $auth_option = undef,
   $order       = '150',
 

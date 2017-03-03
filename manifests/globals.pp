@@ -28,7 +28,13 @@ class edbas::globals (
   $pg_ident_conf_path       = undef,
   $edbas_conf_path     = undef,
   $recovery_conf_path       = undef,
-  $default_connect_settings = {},
+  $default_connect_settings = {
+                              'PGUSER' => "enterprisedb",
+                              'PGPASSWORD' => 'edb',
+                              'PGHOST' => '/tmp',
+                              'PGPORT' => '5444',
+                              'PGDATABASE' => 'edb',
+                              },
 
   $pg_hba_conf_defaults     = undef,
 

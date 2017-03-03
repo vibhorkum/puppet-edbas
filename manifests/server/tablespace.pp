@@ -50,7 +50,7 @@ define edbas::server::tablespace(
     require => [Class['edbas::server'], File[$location]],
   }
 
-  if($owner != undef and defined(edbas::server::role[$owner])) {
-    edbas::server::role[$owner]->edbas_psql[$create_ts]
+  if($owner != undef and defined(Edbas::Server::Role[$owner])) {
+    edbas::server::role[$owner]->Edbas_psql[$create_ts]
   }
 }

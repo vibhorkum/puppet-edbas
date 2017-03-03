@@ -2,7 +2,7 @@
 class edbas::params inherits edbas::globals {
   $version                    = $edbas::globals::globals_version
   $postgis_version            = $edbas::globals::globals_postgis_version
-  $listen_addresses           = 'localhost'
+  $listen_addresses           = ''
   $port                       = 5444
   $log_line_prefix            = '%t '
   $ip_mask_deny_postgres_user = '0.0.0.0/0'
@@ -41,7 +41,6 @@ class edbas::params inherits edbas::globals {
   $confdir                    = pick($confdir, $datadir)
   $psql_path                  = pick($psql_path, "${bindir}/psql")
   $pg_isready                 = pick($pg_isready, "${bindir}/pg_isready")
-  $service_reload             = "service ${service_name} reload"
   $perl_package_name          = pick($perl_package_name, 'perl-DBD-Pg')
   $python_package_name        = pick($python_package_name, 'python-psycopg2')
 
@@ -53,8 +52,11 @@ class edbas::params inherits edbas::globals {
   
   $os_major_release = 0 + $::operatingsystemmajrelease  
   if ($os_major_release > 6) {
+      $service_reload             = "systemctl reload ${service_name}"
      $service_status = pick($service_status, "systemctl status ${service_name} | /bin/grep -q 'Active: active (running)'")
-  } else { $service_status = pick($service_status, "/etc/init.d/${service_name} status | /bin/grep -q '${service_name} is running'")
+  } else { 
+      $service_status = pick($service_status, "/etc/init.d/${service_name} status | /bin/grep -q '${service_name} is running'")
+      $service_reload             = "service ${service_name} reload"
   } 
       # Since we can't determine defaults on our own, we rely on users setting
       # parameters with the edbas::globals class. Here we are checking
@@ -75,5 +77,5 @@ class edbas::params inherits edbas::globals {
   $pg_ident_conf_path   = pick($pg_ident_conf_path, "${confdir}/pg_ident.conf")
   $postgresql_conf_path = pick($postgresql_conf_path, "${confdir}/postgresql.conf")
   $recovery_conf_path   = pick($recovery_conf_path, "${datadir}/recovery.conf")
-  $default_database     = pick($default_database, 'postgres')
+  $default_database     = pick($default_database, 'edb')
 }

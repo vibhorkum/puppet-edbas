@@ -36,14 +36,14 @@ class edbas::server::config {
     }
 
     if $pg_hba_conf_defaults {
-        Edbas::Server::Pg_hba_rule  { 'local_setting':
+        Edbas::Server::Pg_hba_rule  { 
         database => 'all',
         user => 'all',
       }
 
       # Lets setup the base rules
       $local_auth_option = undef
-      edbas::server::pg_hba_rule  { 'local access as postgres user':
+      edbas::server::pg_hba_rule  { 'local access as enterprisedb user':
         type        => 'local',
         user        => $user,
         auth_method => 'ident',
@@ -56,14 +56,14 @@ class edbas::server::config {
         auth_option => $local_auth_option,
         order       => '002',
       }
-      edbas::server::pg_hba_rule  { 'allow localhost TCP access to postgresql user':
+      edbas::server::pg_hba_rule  { 'allow localhost TCP access to EDBAS user':
         type        => 'host',
         user        => $user,
         address     => '127.0.0.1/32',
         auth_method => 'md5',
         order       => '003',
       }
-      edbas::server::pg_hba_rule  { 'deny access to postgresql user':
+      edbas::server::pg_hba_rule  { 'deny access to EDBAS user':
         type        => 'host',
         user        => $user,
         address     => $ip_mask_deny_postgres_user,
@@ -89,14 +89,14 @@ class edbas::server::config {
     # them into a resources hash, and pass the result to create_resources
     $ipv4acl_resources = edbas_acls_to_resources_hash($ipv4acls,
     'ipv4acls', 10)
-    create_resources('edbas::server::pg_hba_rule ', $ipv4acl_resources)
+    create_resources('Edbas::Server::Pg_hba_rule', $ipv4acl_resources)
 
 
     # ipv6acls are passed as an array of rule strings, here we transform
     # them into a resources hash, and pass the result to create_resources
     $ipv6acl_resources = edbas_acls_to_resources_hash($ipv6acls,
     'ipv6acls', 102)
-    create_resources('Edbas::Server::Pg_hba_rule ', $ipv6acl_resources)
+    create_resources('Edbas::Server::Pg_hba_rule', $ipv6acl_resources)
   }
 
   # We must set a "listen_addresses" line in the postgresql.conf if we
