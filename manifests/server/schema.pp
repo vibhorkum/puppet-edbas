@@ -1,14 +1,5 @@
-# = Type: edbas::server::schema
-#
-# Create a new schema. See README.md for more details.
-#
-# == Requires:
-#
-# The database must exist and the edbas user should have enough privileges
-#
-# == Sample Usage:
-#
-# edbas::server::schema {'private':
+# Usage:
+# edbas::server::schema {'schemaname':
 #     db => 'template1',
 # }
 #
