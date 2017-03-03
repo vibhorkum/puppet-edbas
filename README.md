@@ -70,9 +70,9 @@ edbas::server::pg_hba_rule { 'allow application using localhost':
   type               => 'host',
   database           => 'app',
   user               => 'app',
-  address            => '200.1.2.0/24',
+  address            => '127.0.0.1/32',
   auth_method        => 'md5',
   target             => '/path/to/pg_hba.conf',
-  postgresql_version => '9.4',
+  edbas_version => '9.5',
 }
 ```
