@@ -25,8 +25,8 @@ If user wants to apply modify the listen_addresses and port parameters and wants
  class {'edbas::globals':
   manage_package_repo => true,
   version             => '9.5',
-  yum_user            => 'qmg',
-  yum_password        => 'EdB123',
+  yum_user            => '<yum user>',
+  yum_password        => '<yum password>',
  } ->
   class {'edbas::server':
   ip_mask_deny_postgres_user => '0.0.0.0/32',
