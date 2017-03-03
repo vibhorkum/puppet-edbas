@@ -36,7 +36,7 @@ If user wants to apply modify the listen_addresses and port parameters and wants
   }
 ```
 
-### Creating a database in EDBAS 9.5:
+### Creating a database with owner in EDBAS 9.5:
 For creating database with owner in EDBAS 9.5, following syntax can be used:
 ```
   edbas::server::db { 'commerce':
@@ -45,7 +45,21 @@ For creating database with owner in EDBAS 9.5, following syntax can be used:
   } 
   
   ```
-  
+ 
+### Creating database and changing owner
+```
+  edbas::server::database { 'commerce2':
+  owner     => 'commerce',
+  }
+```
+If user wants to use sepcific template, following syntax can be used:
+```
+  edbas::server::database { 'commerce2':
+  owner     => 'commerce',
+  template  => 'template1',
+  }
+```
+
 ### Creating a tablespace in EDBAS 9.5:
   Following syntax can be used:
   ```
