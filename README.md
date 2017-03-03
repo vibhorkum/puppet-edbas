@@ -46,7 +46,7 @@ For creating database with owner in EDBAS 9.5, following syntax can be used:
   
   ```
   
-  ### Creating a tablespace in EDBAS 9.5:
+### Creating a tablespace in EDBAS 9.5:
   Following syntax can be used:
   ```
   
