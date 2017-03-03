@@ -28,13 +28,7 @@ class edbas::globals (
   $pg_ident_conf_path       = undef,
   $edbas_conf_path     = undef,
   $recovery_conf_path       = undef,
-  $default_connect_settings = {
-                              'PGUSER' => "enterprisedb",
-                              'PGPASSWORD' => 'edb',
-                              'PGHOST' => '/tmp',
-                              'PGPORT' => '5444',
-                              'PGDATABASE' => 'edb',
-                              },
+  $default_connect_settings = {},
 
   $pg_hba_conf_defaults     = undef,
 
@@ -69,6 +63,7 @@ class edbas::globals (
    $err_prefix = "Module ${module_name} does not provide defaults for osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}; please specify a value for ${module_name}::globals::"
    if ($yum_user == undef) { fail("${err_prefix}yum_user") }
    if ($yum_password == undef) { fail("${err_prefix}yum_password") }
+
   # We are determining this here, because it is needed by the package repo
   # class.
   $default_version = '9.5'
@@ -85,7 +80,7 @@ class edbas::globals (
     undef   => $default_postgis_version,
     default => $postgis_version,
   }
-  #
+  
   # Setup of the repo only makes sense globally, so we are doing this here.
   if($manage_package_repo) {
     class { 'edbas::repo':

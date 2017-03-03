@@ -30,7 +30,7 @@ define edbas::server::schema(
     $port = $edbas::server::port
   }
 
-  edbas_psql { 'connection_string':
+  Edbas_psql {
     db         => $db,
     psql_user  => $user,
     psql_group => $group,
@@ -46,12 +46,12 @@ define edbas::server::schema(
   }
 
   $schema_command = "CREATE SCHEMA \"${schema}\" ${authorization}"
-  $unless         = "SELECT nspname FROM pg_namespace WHERE nspname='${schema}'"
+  $unless         = "SELECT nspname FROM pg_namespace WHERE nspname='${schema}' and nspparent=0"
 
   edbas_psql { $schema_title:
     command => $schema_command,
     unless  => $unless,
-    require => Class['edbas::server'],
+    require => Class['Edbas::Server'],
   }
 
   if($owner != undef and defined(edbas::server::role[$owner])) {

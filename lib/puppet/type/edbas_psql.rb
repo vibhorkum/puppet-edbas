@@ -85,12 +85,12 @@ Puppet::Type.newtype(:edbas_psql) do
 
   newparam(:psql_user) do
     desc "The system user account under which the psql command should be executed."
-    defaultto("postgres")
+    defaultto("enterprisedb")
   end
 
   newparam(:psql_group) do
     desc "The system user group account under which the psql command should be executed."
-    defaultto("postgres")
+    defaultto("enterprisedb")
   end
 
   newparam(:cwd, :parent => Puppet::Parameter::Path) do

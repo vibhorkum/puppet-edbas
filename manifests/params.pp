@@ -24,16 +24,10 @@ class edbas::params inherits edbas::globals {
   $user                       = pick($user, 'enterprisedb')
   $group                      = pick($group, 'enterprisedb')
   $needs_initdb               = pick($needs_initdb, true)
+
+  # basic EDB settings for bin,data,log and config directory
   $version_parts              = split($version, '[.]')
   $package_version            = "${version_parts[0]}${version_parts[1]}"
-  $client_package_name        = pick($client_package_name, "ppas${package_version}-server-client")
-  $server_package_name        = pick($server_package_name, "ppas${package_version}-server")
-  $contrib_package_name       = pick($contrib_package_name,"ppas${package_version}-contrib")
-  $devel_package_name         = pick($devel_package_name, "ppas${package_version}-devel")
-  $java_package_name          = pick($java_package_name, "ppas${package_version}-jdbc")
-  $docs_package_name          = pick($docs_package_name, "ppas${package_version}-docs")
-  $plperl_package_name        = pick($plperl_package_name, "ppas${package_version}-plperl")
-  $plpython_package_name      = pick($plpython_package_name, "ppas${package_version}-plpython")
   $service_name               = pick($service_name,"ppas-${version}")
   $bindir                     = pick($bindir, "/usr/ppas-${version}/bin")
   $datadir                    = pick($datadir, "/var/lib/ppas/${version}/data")
@@ -49,7 +43,19 @@ class edbas::params inherits edbas::globals {
    } else {
      $postgis_package_name = "ppas${package_version}-postgis"
    }
-  
+
+  # EDB Package names 
+  $client_package_name        = pick($client_package_name, "ppas${package_version}-server-client")
+  $server_package_name        = pick($server_package_name, "ppas${package_version}-server")
+  $contrib_package_name       = pick($contrib_package_name,"ppas${package_version}-server-contrib")
+  $devel_package_name         = pick($devel_package_name, "ppas${package_version}-devel")
+  $java_package_name          = pick($java_package_name, "ppas${package_version}-jdbc")
+  $docs_package_name          = pick($docs_package_name, "ppas${package_version}-server-docs")
+  $plperl_package_name        = pick($plperl_package_name, "ppas${package_version}-server-plperl")
+  $plpython_package_name      = pick($plpython_package_name, "ppas${package_version}-server-plpython")
+   
+  # verify the OS Version and according change the service command.
+  # from version 7.0, RHEL/CentOS has systemctl 
   $os_major_release = 0 + $::operatingsystemmajrelease  
   if ($os_major_release > 6) {
       $service_reload             = "systemctl reload ${service_name}"
@@ -58,9 +64,8 @@ class edbas::params inherits edbas::globals {
       $service_status = pick($service_status, "/etc/init.d/${service_name} status | /bin/grep -q '${service_name} is running'")
       $service_reload             = "service ${service_name} reload"
   } 
-      # Since we can't determine defaults on our own, we rely on users setting
-      # parameters with the edbas::globals class. Here we are checking
-      # that the mandatory minimum is set for the module to operate.
+
+   # making sure mandatory parameters have been passed
    $err_prefix = "Module ${module_name} does not provide defaults for osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}; please specify a value for ${module_name}::globals::"
    if ($needs_initdb == undef) { fail("${err_prefix}needs_initdb") }
    if ($service_name == undef) { fail("${err_prefix}service_name") }

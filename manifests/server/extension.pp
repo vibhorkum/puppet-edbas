@@ -1,4 +1,4 @@
-# Activate an extension on a edbas database
+# Activate an extension on a postgresql database
 define edbas::server::extension (
   $database,
   $extension = $name,
@@ -10,19 +10,21 @@ define edbas::server::extension (
   $user          = $edbas::server::user
   $group         = $edbas::server::group
   $psql_path     = $edbas::server::psql_path
+  $postgres_password = $edbas::server::postgres_password
+  $port              = $edbas::server::port
 
   case $ensure {
     'present': {
       $command = "CREATE EXTENSION \"${extension}\""
       $unless_comp = '='
       $package_require = []
-      $package_before = edbas_psql["Add ${extension} extension to ${database}"]
+      $package_before = Edbas_psql["Add ${extension} extension to ${database}"]
     }
 
     'absent': {
       $command = "DROP EXTENSION \"${extension}\""
       $unless_comp = '!='
-      $package_require = edbas_psql["Add ${extension} extension to ${database}"]
+      $package_require = Edbas_psql["Add ${extension} extension to ${database}"]
       $package_before = []
     }
 
@@ -33,16 +35,20 @@ define edbas::server::extension (
 
 
   edbas_psql {"Add ${extension} extension to ${database}":
-
     psql_user        => $user,
     psql_group       => $group,
     psql_path        => $psql_path,
     connect_settings => $connect_settings,
-
     db               => $database,
+    environment => [
+      "PGDATABASE=${database}",
+      "PGPASSWORD=${postgres_password}",
+      "PGPORT=${port}",
+    ],
+
     command          => $command,
     unless           => "SELECT t.count FROM (SELECT count(extname) FROM pg_extension WHERE extname = '${extension}') as t WHERE t.count ${unless_comp} 1",
-    require          => edbas::server::database[$database],
+    require          => Edbas::Server::Database[$database],
   }
 
   if $package_name {

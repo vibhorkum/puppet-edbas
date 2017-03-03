@@ -18,12 +18,12 @@ define edbas::server::config_entry (
   case $name {
     /data_directory|hba_file|ident_file|include|listen_addresses|port|max_connections|superuser_reserved_connections|unix_socket_directory|unix_socket_group|unix_socket_permissions|bonjour|bonjour_name|ssl|ssl_ciphers|shared_buffers|max_prepared_transactions|max_files_per_process|shared_preload_libraries|wal_level|wal_buffers|archive_mode|max_wal_senders|hot_standby|logging_collector|silent_mode|track_activity_query_size|autovacuum_max_workers|autovacuum_freeze_max_age|max_locks_per_transaction|max_pred_locks_per_transaction|restart_after_crash|lc_messages|lc_monetary|lc_numeric|lc_time|log_min_duration_statement/: {
       if $edbas::server::service_restart_on_change {
-        Postgresql_conf {
+        Edbas_conf {
           notify => Class['edbas::server::service'],
           before => Class['edbas::server::reload'],
         }
       } else {
-        Postgresql_conf {
+        Edbas_conf {
             before => [
                 Class['edbas::server::service'],
                 Class['edbas::server::reload'],
@@ -33,37 +33,12 @@ define edbas::server::config_entry (
     }
 
     default: {
-      Postgresql_conf {
+      Edbas_conf {
         notify => Class['edbas::server::reload'],
       }
     }
   }
 
-  # We have to handle ports and the data directory in a weird and
-  # special way.  On early Debian and Ubuntu and RHEL we have to ensure
-  # we stop the service completely. On RHEL 7 we either have to create
-  # a systemd override for the port or update the sysconfig file, but this
-  # is managed for us in edbas::server::config.
-  if $::operatingsystem == 'Debian' or $::operatingsystem == 'Ubuntu' {
-    if $name == 'port' and ( $::operatingsystemrelease =~ /^6/ or $::operatingsystemrelease =~ /^10\.04/ ) {
-        exec { "edbas_stop_${name}":
-          command => "service ${::edbas::server::service_name} stop",
-          onlyif  => "service ${::edbas::server::service_name} status",
-          unless  => "grep 'port = ${value}' ${::edbas::server::postgresql_conf_path}",
-          path    => '/usr/sbin:/sbin:/bin:/usr/bin:/usr/local/bin',
-          before  => edbas_conf[$name],
-        }
-    }
-    elsif $name == 'data_directory' {
-      exec { "edbas_stop_${name}":
-        command => "service ${::edbas::server::service_name} stop",
-        onlyif  => "service ${::edbas::server::service_name} status",
-        unless  => "grep \"data_directory = '${value}'\" ${::edbas::server::postgresql_conf_path}",
-        path    => '/usr/sbin:/sbin:/bin:/usr/bin:/usr/local/bin',
-        before  => edbas_conf[$name],
-      }
-    }
-  }
   if $::osfamily == 'RedHat' {
     if ! ($::operatingsystemrelease =~ /^7/ or $::operatingsystem == 'Fedora') {
       if $name == 'port' {
@@ -111,7 +86,7 @@ define edbas::server::config_entry (
 
   case $ensure {
     /present|absent/: {
-      Postgresql_conf { $name:
+      Edbas_conf { $name:
         ensure  => $ensure,
         target  => $target,
         value   => $value,

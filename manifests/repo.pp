@@ -6,7 +6,7 @@ class edbas::repo (
   $yumpassword = undef
 ) {
   case $::osfamily {
-    'RedHat', 'Linux': {
+    'RedHat': {
       if $version == undef {
         fail("The parameter 'version' for 'edbas::repo' is undefined. You must always define it when osfamily == Redhat or Linux")
       }

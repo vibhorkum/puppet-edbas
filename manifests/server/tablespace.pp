@@ -5,9 +5,10 @@ define edbas::server::tablespace(
   $spcname = $title,
   $connect_settings = $edbas::server::default_connect_settings,
 ) {
-  $user      = $edbas::server::user
-  $group     = $edbas::server::group
-  $psql_path = $edbas::server::psql_path
+  $user       = $edbas::server::user
+  $group      = $edbas::server::group
+  $epsql_path = $edbas::server::psql_path
+  $db         = $edbas::server::default_database
 
   # If the connection settings do not contain a port, then use the local server port
   if $connect_settings != undef and has_key( $connect_settings, 'PGPORT') {
@@ -16,7 +17,8 @@ define edbas::server::tablespace(
     $port = $edbas::server::port
   }
 
-  edbas_psql { 'group_role':
+  Edbas_psql { 
+    db              => $db,
     psql_user        => $user,
     psql_group       => $group,
     psql_path        => $psql_path,
