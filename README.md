@@ -1,7 +1,7 @@
 # puppet-edbas
 puppet-code for EDB Advanced Server
 
-This is an initial version of puppet code for ppas-9.5 based, on puppet code of postgresql. 
+This is an initial version of puppet code for ppas-9.5, based on puppet code of postgresql. 
 https://github.com/puppetlabs/puppetlabs-postgresql
 
 Symatics and module works similar to postgresql modules.
