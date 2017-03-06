@@ -89,3 +89,8 @@ edbas::server::pg_hba_rule { 'allow application using localhost':
   edbas_version => '9.5',
 }
 ```
+# TODO
+* EFM installation module (in progress)
+* BART module (in progress)
+* BART config parser
+* EFM nodes parser
