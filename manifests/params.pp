@@ -38,11 +38,34 @@ class edbas::params inherits edbas::globals {
   $perl_package_name          = pick($perl_package_name, 'perl-DBD-Pg')
   $python_package_name        = pick($python_package_name, 'python-psycopg2')
 
+  # EDB Bart settings
+  $bart_version               = $edbas::globals::bart_version
+  $edb_bart_version           = pick($bart_version,'1.1')
+  $bart_version_parts         = split($edb_bart_version,'[.]')
+  $bart_version_major         = "${bart_version_parts[0]}${bart_version_parts[1]}" 
+  if ($edb_bart_version == '1.1'){
+     $bart_package_name       = pick($bart_package_name,"edb-bart")
+   } else {
+     $bart_package_name       = pick($bart_backpage_name,"edb-bart${bart_version_major}")
+   }
+  $bart_bindir                = pick($bart_bindir,"/usr/edb-bart-${bart_version}/bin")
+  $bart_confdir               = pick($bart_confdir,"/usr/edb-bart-${bart_version}/etc")
+
+  # EDB EFM settings
+  $efm_version                = $edbas::globals::efm_version
+  $edb_efm_version            = pick($efm_version,'2.0')
+  $efm_version_parts          = split($edb_efm_version,'[.]')
+  $efm_version_major          = "${efm_version_parts[0]}${efm_version_parts[1]}" 
+  $efm_package_name           = pick($efm_backpage_name,"efm${efm_version_major}")
+  $efm_bindir                 = pick($efm_bindir,"/usr/efm-${efm_version}/bin")
+  $efm_confdir                = pick($efm_confdir,"/etc/efm-${efm_version}")
+
   if $edbas::globals::postgis_package_name {
      $postgis_package_name = $edbas::globals::postgis_package_name
    } else {
      $postgis_package_name = "ppas${package_version}-postgis"
    }
+
 
   # EDB Package names 
   $client_package_name        = pick($client_package_name, "ppas${package_version}-server-client")

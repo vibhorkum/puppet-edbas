@@ -58,6 +58,16 @@ class edbas::globals (
   $manage_recovery_conf     = undef,
 
   $manage_package_repo      = undef,
+
+  $bart_version             = undef,
+  $bart_bindir              = undef,
+  $bart_confdir             = undef,
+  $bart_package_name        = undef,
+
+  $efm_version             = undef,
+  $efm_bindir              = undef,
+  $efm_confdir             = undef,
+  $efm_package_name        = undef,
 ) {
   #  check if yumuser and yum password is provided or not:
    $err_prefix = "Module ${module_name} does not provide defaults for osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}; please specify a value for ${module_name}::globals::"
