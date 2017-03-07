@@ -89,8 +89,27 @@ edbas::server::pg_hba_rule { 'allow application using localhost':
   edbas_version => '9.5',
 }
 ```
+### For installing EFM on the server
+```
+ class {'edbas::globals':
+  manage_package_repo => true,
+  efm_version         => '2.0',
+  yum_user            => '<yum user>',
+  yum_password        => '<yum password>',
+ } ->
+class {'edbas::efm': } 
+```
+### For installing bart on the server
+```
+ class {'edbas::globals':
+  manage_package_repo => true,
+  bart_version        => '1.1',
+  yum_user            => '<yum user>',
+  yum_password        => '<yum password>',
+ } ->
+class {'edbas::bart': } 
+```
+
 # TODO
-* EFM installation module (in progress)
-* BART module (in progress)
 * BART config parser
 * EFM nodes parser
