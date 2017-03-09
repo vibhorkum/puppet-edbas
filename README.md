@@ -113,3 +113,5 @@ class {'edbas::bart': }
 # TODO
 * BART config parser
 * EFM nodes parser
+* EFM NODES management
+* BART config management
